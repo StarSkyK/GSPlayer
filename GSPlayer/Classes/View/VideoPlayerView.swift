@@ -333,7 +333,7 @@ private extension VideoPlayerView {
         }
         
         playerLayerReadyForDisplayObservation = playerLayer.observe(\.isReadyForDisplay) { [unowned self, unowned player] playerLayer, _ in
-            if playerLayer.isReadyForDisplay, player.rate > 0 {
+            if (playerLayer.isReadyForDisplay || player.currentItem?.status == .readyToPlay), player.rate > 0 {
                 self.isLoaded = true
                 self.state = .playing
             }
