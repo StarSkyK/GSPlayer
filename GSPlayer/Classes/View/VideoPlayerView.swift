@@ -200,18 +200,18 @@ open class VideoPlayerView: UIView {
         self.isReplay = false
         self.isLoaded = false
         
+        observe(player: player)
+        observe(playerItem: playerItem)
+        
         if playerItem.isEnoughToPlay || url.isFileURL {
             state = .none
             isLoaded = playerItem.status == .readyToPlay
+            player.replaceCurrentItem(with: playerItem)
             player.playImmediately(atRate: speedRate)
         } else {
             state = .loading
+            player.replaceCurrentItem(with: playerItem)
         }
-        
-        player.replaceCurrentItem(with: playerItem)
-        
-        observe(player: player)
-        observe(playerItem: playerItem)
     }
     
     /// Replay video.
