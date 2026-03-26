@@ -348,7 +348,7 @@ private extension VideoPlayerView {
             case .waitingToPlayAtSpecifiedRate:
                 break
             case .playing:
-                if self.playerLayer.isReadyForDisplay, player.rate > 0 {
+                if (self.playerLayer.isReadyForDisplay || self.player?.currentItem?.status == .readyToPlay), player.rate > 0 {
                     self.isLoaded = true
                     if self.playProgress == 0, self.isReplay { self.isReplay = false; break }
                     self.state = .playing
