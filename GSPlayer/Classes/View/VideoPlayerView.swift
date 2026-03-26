@@ -383,6 +383,8 @@ private extension VideoPlayerView {
         playerItemStatusObservation = playerItem.observe(\.status) { [unowned self] item, _ in
             if item.status == .failed, let error = item.error as NSError? {
                 self.state = .error(error)
+            } else if item.status == .readyToPlay {
+                self.isLoaded = true
             }
         }
         
