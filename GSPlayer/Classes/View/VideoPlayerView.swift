@@ -234,6 +234,14 @@ open class VideoPlayerView: UIView {
         player?.pause()
     }
     
+    open func stop(){
+        // 停止播放 + 清空资源（不销毁播放器）
+        pause()           // 先暂停
+        seek(to: .zero) // 回到开头
+        player?.replaceCurrentItem(with: nil) // 清空视频资源
+        state = .none     // 重置状态
+    }
+    
     /// Moves the playback cursor and invokes the specified block when the seek operation has either been completed or been interrupted.
     open func seek(to time: CMTime, completion: ((Bool) -> Void)? = nil) {
         player?.seek(to: time) { completion?($0) }
