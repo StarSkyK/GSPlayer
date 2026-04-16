@@ -295,6 +295,10 @@ public extension VideoPlayerView {
 }
 
 private extension VideoPlayerView {
+
+    func canUpdatePlaybackState(for player: AVPlayer) -> Bool {
+        return playerLayer.isReadyForDisplay || (player.currentItem?.isAudioOnly ?? false)
+    }
     
     func configureInit() {
         
@@ -348,7 +352,7 @@ private extension VideoPlayerView {
             case .waitingToPlayAtSpecifiedRate:
                 break
             case .playing:
-                if self.playerLayer.isReadyForDisplay, player.rate > 0 {
+                if self.canUpdatePlaybackState(for: player), player.rate > 0 {
                     self.isLoaded = true
                     if self.playProgress == 0, self.isReplay { self.isReplay = false; break }
                     self.state = .playing
@@ -383,6 +387,18 @@ private extension VideoPlayerView {
         playerItemStatusObservation = playerItem.observe(\.status) { [unowned self] item, _ in
             if item.status == .failed, let error = item.error as NSError? {
                 self.state = .error(error)
+                return
+            }
+
+            guard item.status == .readyToPlay, item.isAudioOnly else {
+                return
+            }
+
+            self.isLoaded = true
+            if self.player?.rate ?? 0 > 0 {
+                self.state = .playing
+            } else {
+                self.state = .paused(playProgress: self.playProgress, bufferProgress: self.bufferProgress)
             }
         }
         

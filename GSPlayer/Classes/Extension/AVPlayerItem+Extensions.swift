@@ -30,6 +30,14 @@ public extension AVPlayerItem {
     var totalDuration: Double {
         return Double(CMTimeGetSeconds(asset.duration))
     }
+
+    var hasVideoTrack: Bool {
+        return !asset.tracks(withMediaType: .video).isEmpty
+    }
+
+    var isAudioOnly: Bool {
+        return status == .readyToPlay && !hasVideoTrack
+    }
     
 }
 

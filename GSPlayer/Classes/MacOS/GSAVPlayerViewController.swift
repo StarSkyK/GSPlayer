@@ -41,30 +41,34 @@ open class GSAVPlayerViewController: NSViewController {
     
     /// Played progress, value range 0-1.
     public var playProgress: Double {
-        return playerView.isReadyForDisplay ? player?.playProgress ?? 0 : 0
+        return canAccessPlaybackMetrics ? player?.playProgress ?? 0 : 0
     }
     
     /// Played length in seconds.
     public var currentDuration: Double {
-        return playerView.isReadyForDisplay ? player?.currentDuration ?? 0 : 0
+        return canAccessPlaybackMetrics ? player?.currentDuration ?? 0 : 0
     }
     
     public var totalDuration: Double {
-        return playerView.isReadyForDisplay ? player?.totalDuration ?? 0 : 0
+        return canAccessPlaybackMetrics ? player?.totalDuration ?? 0 : 0
     }
     
     /// Buffered progress, value range 0-1.
     public var bufferProgress: Double {
-        return playerView.isReadyForDisplay ? player?.bufferProgress ?? 0 : 0
+        return canAccessPlaybackMetrics ? player?.bufferProgress ?? 0 : 0
     }
     
     /// Buffered length in seconds.
     public var currentBufferDuration: Double {
-        return playerView.isReadyForDisplay ? player?.currentBufferDuration ?? 0 : 0
+        return canAccessPlaybackMetrics ? player?.currentBufferDuration ?? 0 : 0
     }
     
     //MARK:- private
     private var isLoaded = false
+
+    private var canAccessPlaybackMetrics: Bool {
+        return playerView.isReadyForDisplay || (player?.currentItem?.isAudioOnly ?? false)
+    }
     
     private var playerBufferingObservation: NSKeyValueObservation?
     private var playerItemKeepUpObservation: NSKeyValueObservation?
